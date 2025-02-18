@@ -1,13 +1,17 @@
 const { Client } = require('pg');
 
 const client = new Client({
-    user: 'postgres',
+    user: 'wool',
     host: 'localhost',
-    database: 'mydatabase',
-    password: 'yourpassword',
+    database: 'taskdb',
+    password: '46wool0620',
     port: 5432,
 });
 
 client.connect().then(() => console.log('Connected to PostgreSQL')).catch(err => console.error('Connection error', err.stack));
 
-module.exports = client;
+client.query('SELECT * FROM taskdb', (req, res) => {
+    if (err) throw err;
+    console.log(res.rows);
+    client.end();
+});
