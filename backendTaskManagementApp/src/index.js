@@ -1,5 +1,5 @@
 const express = require('express');
-const client = require('./controllers/db');
+const client = require('./src/db');
 
 const app = express();
 const PORT = process.env.PORT || 30000;
