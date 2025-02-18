@@ -1,8 +1,19 @@
-const express = require('express');
-const client = require('./src/db');
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import { Client } from "pg";
 
+dotenv.config();
 const app = express();
-const PORT = process.env.PORT || 30000;
+const PORT = process.env.PORT || 5000;
+app.use(express.json());
+app.use(cors());
+
+const client = new Client({
+   connectionString: process.env.DATABASE_URL,
+});
+
+client.connect().then(() => console.log("Connected to PostgreSQL")).catch((err) => console.error("Database connection error:", err.stack));
 
 // Load and test postgreSQL database
 app.get('/', async (req, res) => {
@@ -35,7 +46,15 @@ app.delete('tasks/:id', (req, res) => {
 // register         use bcrypt for password hashing to store securely
 
 // login            return JWT upon login
-
+app.post('/api/auth/login', (req, res) => {
+   const { username, password } = req.body;
+   if (username === "admin" && password === "password"){
+      const token = jwt.sign({ username }, process.env.JWT_SECRET, { expiresIn: '1h' });
+      res.json({ token });
+   } else {
+      res.status(401).json({ message: "Invalid credentials" });
+   }
+});
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
