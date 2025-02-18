@@ -1,17 +1,12 @@
-const { Client } = require('pg');
+import { Client } from 'pg';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const client = new Client({
-    user: 'wool',
-    host: 'localhost',
-    database: 'taskdb',
-    password: '46wool0620',
-    port: 5432,
+  connectionString: process.env.DATABASE_URL, // Use the DATABASE_URL from .env
 });
 
-client.connect().then(() => console.log('Connected to PostgreSQL')).catch(err => console.error('Connection error', err.stack));
+client.connect().then(() => console.log('Connected to PostgreSQL')).catch((err) => console.error('Database connection error:', err.stack));
 
-client.query('SELECT * FROM taskdb', (req, res) => {
-    if (err) throw err;
-    console.log(res.rows);
-    client.end();
-});
+export default client;
