@@ -1,10 +1,17 @@
 const express = require('express');
-const app = express();
+const client = require('./controllers/db');
 
+const app = express();
 const PORT = process.env.PORT || 30000;
 
-app.get('/', (req, res) => {
-    res.send('Task Management App');
+// Load and test postgreSQL database
+app.get('/', async (req, res) => {
+    try{
+        const result = await client.query('SELECT NOW()'); //test
+        res.send(`Database connected! Server time: ${result.rows[0].now}`);
+    } catch (error) {
+        res.status(500).send('Database connection failed');
+    }
 });
 
 // /tasks           verify JWT upon running protected tasks
