@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import client from "./db.js";
 import authRoutes from "./routes/auth.js";
+import authenticate from "./middleware/authMiddleware.js";
 
 dotenv.config();
 const app = express();
@@ -19,6 +20,10 @@ app.get('/', async (req, res) => {
     } catch (error) {
         res.status(500).send('Database connection failed');
     }
+});
+
+app.get('/api/protected', authenticate, (req, res) => {
+    res.json({ message: ' you have access to this protected route', user: req.user });
 });
 
 // /tasks           verify JWT upon running protected tasks
