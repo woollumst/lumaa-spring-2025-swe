@@ -1,7 +1,8 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import { Client } from "pg";
+import jwt from "jsonwebtoken";
+import client from "./db.js";
 
 dotenv.config();
 const app = express();
@@ -9,13 +10,6 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 app.use(cors());
 
-const client = new Client({
-   connectionString: process.env.DATABASE_URL,
-});
-
-client.connect().then(() => console.log("Connected to PostgreSQL")).catch((err) => console.error("Database connection error:", err.stack));
-
-// Load and test postgreSQL database
 app.get('/', async (req, res) => {
     try{
         const result = await client.query('SELECT NOW()'); //test
@@ -26,6 +20,7 @@ app.get('/', async (req, res) => {
 });
 
 // /tasks           verify JWT upon running protected tasks
+/*
 app.get('/tasks', (req, res) => {
     res.send('get /tasks');
 });
@@ -41,6 +36,8 @@ app.put('/tasks/:id', (req, res) => {
 app.delete('tasks/:id', (req, res) => {
     res.send('delete /tasks/:id');
 });
+*/
+
 
 // /user            make password hashed string
 // register         use bcrypt for password hashing to store securely
