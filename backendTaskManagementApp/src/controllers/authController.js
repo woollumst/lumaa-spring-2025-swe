@@ -2,7 +2,8 @@ import express from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
-import client from "../db.js";
+import client from "../repository/db.js";
+import authService from "../service/authService.js";
 
 dotenv.config();
 
@@ -12,11 +13,8 @@ authRoutes.post("/register", async (req, res) => {
     const { username, password } = req.body(); // accept user input for username/password
     
     try{
-        const hashedPassword = await bcrypt.hash(password, 10); // use bcrypt to encrypt password
-        const result = client.query( // register user to user database
-            'INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *',
-            [ username, hashedPassword ]
-        );
+        const result = authService.authRegister(username, password); // call service layer to handle registration
+
         res.status(201).json({ message: 'User registered successfully', user: result.rows[0] }); // registration successful
     } catch (error) {
         console.error(error);
@@ -28,13 +26,13 @@ authRoutes.post("/login", async (req, res) => {
     const { username, password } = req.body; //accept user input for username/password
 
     try{
-        const result = await client.query('SELECT * FROM users WHERE username=$1', [username]); // search db for user with username
+        const result = authService.checkUsername(username);
         const user = result.rows[0]; // pull user from sql query
-
         if(!user){ // handle error for wrong username
             return res.status(401).json({ message: 'Invalid username or password' });
         }
-        const isMatch = await bcrypt.compare(password, user.password); // check password through bcrypt
+        
+        const isMatch = authService.checkPassword(username, password);
         if(!isMatch){ // handle error for wrong password
             return res.status(401).json({ message: 'Invalid username or password' });
         }
