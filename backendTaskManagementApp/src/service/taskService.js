@@ -17,3 +17,5 @@ class taskService {
         
     }
 }
+
+export default taskService;
