@@ -9,26 +9,54 @@ const taskRoutes = express.Router();
 //get task list
 taskRoutes.get('/tasks', authenticate, async (req, res) => {
     try{
-        const result = await client.query('SELECT * FROM tasks WHERE username=$1', [username]); //might have to fix how i'm doing this variable?
-        //return task array for the React app to process and display
-        res.json({ message: 'getting task list', result, user: req.user }); // Fix?
+        const result = await taskService.getTasks();
+        res.json(result); // Fix?
     } catch (error) {
-        res.status(500).send('Failed to get tasks');
+        console.error(error);
+        res.status(500).json({ error: 'Failed to get tasks' });
     }
 });
 
 //create a new task
 taskRoutes.post('/tasks', authenticate, (req, res) => {
-    res.json({ message: ' you have access to this protected route', user: req.user }); 
+    const task = req.body;
+    try{
+        const result = await taskService.createTask(task);
+        res.status(201).json(result);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Failed to create task' });
+    } 
 });
 
 //update a task
 taskRoutes.put('/tasks/:id', authenticate, (req, res) => { 
-    res.json({ message: ' you have access to this protected route', user: req.user });
+    const { id } = req.params;
+    const task = req.body;
+    try{
+        const updatedTask = await taskService.updateTask(id, task);
+        if(!updatedTask){
+            res.status(404).json({ error : 'Task not found' });
+        }
+        res.json(updatedTask);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error : 'Failed to update task' });
+    }
 });
 
 taskRoutes.delete('tasks/:id', authenticate, (req, res) => { 
-    res.json({ message: ' you have access to this protected route', user: req.user });
+    const { id } = req.params;
+    try{
+        const deletedTask = taskService.deleteTask(id);
+        if(!deletedTask){
+            res.status(404).json({ error : 'Task not found' });
+        }
+        res.json(deletedTask);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Failed to delete task' });
+    }
 });
 
 export default taskRoutes;
