@@ -10,10 +10,11 @@ function App() {
   return (
     <AuthProvider>
       <Router>
+        <Routes>
           <Route path="/login" Component={LoginPage} />
           <Route path="/register" Component={RegisterPage} />
-          <Route path="/dashboard" Component={DashboardPage} />
-          <Redirect from="/" to="/login" />
+          <Route path="/" Component={DashboardPage} />
+        </Routes>
       </Router>
     </AuthProvider>
   )
