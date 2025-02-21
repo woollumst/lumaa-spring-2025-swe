@@ -19,7 +19,12 @@ export const updateTask = async (task: Partial<Task>): Promise<Task> => {
 };
 
 //Users
-export const loginUser = async (credentials: { email: string, password: string }) => {
-    const reponse = await axios.post(`$API_URL}/login`, credentials);
+export const loginUser = async (credentials: { username: string, password: string }) => {
+    const response = await axios.post(`$API_URL}/login`, credentials);
+    return response.data.token;
+}
+
+export const registerUser = async (credentials: { username: string, password: string }) => {
+    const response = await axios.post(`$API_URL}/register`, credentials);
     return response.data.token;
 }
