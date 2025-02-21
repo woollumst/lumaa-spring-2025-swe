@@ -14,7 +14,7 @@ const LoginPage = () => {
         try{
             const token = await loginUser({ email, password });
             login(token);
-            history.push('/dashboard');
+            history.push('/');
         } catch(error) {
             console.error('Login failed', error);
         }
