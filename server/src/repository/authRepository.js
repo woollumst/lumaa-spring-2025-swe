@@ -1,6 +1,6 @@
 import client from "./db.js";
 
-class authRepository {
+export const authRepository = {
     constructor(){}
     
     register (username, hashedPassword) {
@@ -13,6 +13,4 @@ class authRepository {
     async getByUsername (username) {  // pull user from db to handle login
         return await client.query('SELECT * FROM userdb WHERE username=$1', [username]);
     }
-}
-
-export default authRepository;
+};
