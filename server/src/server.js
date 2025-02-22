@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 5000; //grab port variable from env if availabl
 app.use(express.json()); // load json compatibility
 app.use(cors()); // load cors obj
 
-app.use("/api/auth", authRoutes); // login, register routing and token dispersal handled in auth.js
+app.use("/auth", authRoutes); // login, register routing and token dispersal handled in auth.js
 app.use("/tasks", taskRoutes);
 
 app.get('/', async (req, res) => { //home page

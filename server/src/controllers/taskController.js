@@ -7,7 +7,7 @@ const taskRoutes = express.Router();
 // /tasks           verify JWT upon running protected tasks
 
 //get task list
-taskRoutes.get('/tasks', authenticate, async (req, res) => {
+taskRoutes.get('/', authenticate, async (req, res) => {
     try{
         const result = await taskService.getTasks();
         res.json(result); // Fix?
@@ -18,10 +18,10 @@ taskRoutes.get('/tasks', authenticate, async (req, res) => {
 });
 
 //create a new task
-taskRoutes.post('/tasks', authenticate, (req, res) => {
+taskRoutes.post('', authenticate, (req, res) => {
     const task = req.body;
     try{
-        const result = await taskService.createTask(task);
+        const result = taskService.createTask(task);
         res.status(201).json(result);
     } catch (error) {
         console.error(error);
@@ -30,11 +30,11 @@ taskRoutes.post('/tasks', authenticate, (req, res) => {
 });
 
 //update a task
-taskRoutes.put('/tasks/:id', authenticate, (req, res) => { 
+taskRoutes.put('/:id', authenticate, (req, res) => { 
     const { id } = req.params;
     const task = req.body;
     try{
-        const updatedTask = await taskService.updateTask(id, task);
+        const updatedTask = taskService.updateTask(id, task);
         if(!updatedTask){
             res.status(404).json({ error : 'Task not found' });
         }
@@ -45,7 +45,7 @@ taskRoutes.put('/tasks/:id', authenticate, (req, res) => {
     }
 });
 
-taskRoutes.delete('tasks/:id', authenticate, (req, res) => { 
+taskRoutes.delete('/:id', authenticate, (req, res) => { 
     const { id } = req.params;
     try{
         const deletedTask = taskService.deleteTask(id);
