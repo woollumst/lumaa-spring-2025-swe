@@ -1,7 +1,6 @@
 import clients from "./db.js";
 
-class taskRepository {
-    constructor(){}
+export const taskRepository = {
     getTasks(){
         return client.query(
             'SELECT * FROM taskdb'
@@ -28,6 +27,4 @@ class taskRepository {
             [ id ]
         );
     }
-}
-
-export default taskRepository;
+};
