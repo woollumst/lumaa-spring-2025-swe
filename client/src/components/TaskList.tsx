@@ -6,7 +6,7 @@ const TaskList = () => {
     const [tasks, setTasks] = useState<Task[]>([]);
 
     useEffect(() => {
-        fetchTasks().then(setTasks);
+        fetchTasks().then(setTasks).catch(error => console.error("Failed to get tasks", error));
     }, []);
 
     return (
