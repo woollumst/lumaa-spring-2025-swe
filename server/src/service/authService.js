@@ -24,16 +24,30 @@ export const authService = {
     },
 
     handleLogin(username, password) {
-        const user = authRepository.getByUsername(username);
-        if(!user){ // handle error for wrong username
-            return res.status(401).json({ message: 'Invalid username or password' });
+        try{
+            const user = authRepository.getByUsername(username);
+            if(!user){ // handle error for wrong username
+                return res.status(401).json({ message: 'Invalid username or password' });
+            }
+            
+            const isMatch = this.checkPassword(user, password);
+            if(!isMatch){ // handle error for wrong password
+                return res.status(401).json({ message: 'Invalid username or password' });
+            }
+    
+            const token = this.getToken(user);
+            return {
+                success: true,
+                message: 'Login successful',
+                user: {
+                    id: user.id,
+                    username: user.username
+                },
+                token
+            };
+        } catch (error) {
+            console.error('Login error: ', error);
+            return { success: false, message: 'Internal server error' };
         }
-        
-        const isMatch = this.checkPassword(user, password);
-        if(!isMatch){ // handle error for wrong password
-            return res.status(401).json({ message: 'Invalid username or password' });
-        }
-
-        return this.getToken(user);
     }
 };
