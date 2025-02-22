@@ -8,7 +8,7 @@ export const fetchTasks = async (): Promise<Task[]> => {
     if(!response.ok){
         throw new Error(`Error fetching tasks: ${response.statusText}`);
     }
-    return response.json();
+    return response.data;
 }; //fix
 
 export const createTask = async (task: Partial<Task>): Promise<Task> => {
@@ -17,7 +17,12 @@ export const createTask = async (task: Partial<Task>): Promise<Task> => {
 };
 
 export const updateTask = async (task: Partial<Task>): Promise<Task> => {
-    const response = await axios.patch(`${API_URL}tasks`, task);
+    const response = await axios.patch(`${API_URL}tasks/:${task.id}`, task);
+    return response.data;
+};
+
+export const deleteTask = async (task: Partial<Task>): Promise<Task> => { // might need to change this
+    const response = await axios.delete(`${API_URL}tasks/:${task.id}`, task);
     return response.data;
 };
 
