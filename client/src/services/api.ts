@@ -24,13 +24,10 @@ export const updateTask = async (task: Partial<Task>): Promise<Task> => {
 //Users
 export const loginUser = async (credentials: { username: string, password: string }) => {
     const response = await axios.post(`${API_URL}auth/login`, credentials);
-    console.log('tried to login user');
     return response.data.token;
 }
 
 export const registerUser = async (credentials: { username: string, password: string }) => {
-    console.log('registerUser async run, trying to contact db');
     const response = await axios.post(`${API_URL}auth/register`, credentials);
-    console.log('tried to register user');
     return response.data.token;
 }
