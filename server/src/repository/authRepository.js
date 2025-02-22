@@ -1,8 +1,6 @@
 import client from "./db.js";
 
 export const authRepository = {
-    constructor(){}
-    
     register (username, hashedPassword) {
         return client.query( // register user to user database
             'INSERT INTO userdb (username, password) VALUES ($1, $2) RETURNING *',
