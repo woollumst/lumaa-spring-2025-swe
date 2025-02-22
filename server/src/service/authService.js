@@ -7,8 +7,23 @@ dotenv.config();
 
 export const authService = {
     async authRegister(username, password) {
-        const hashedPassword = await bcrypt.hash(password, 10); // use bcrypt to encrypt password
-        return authRepository.register(username, hashedPassword);
+        try{
+            const hashedPassword = await bcrypt.hash(password, 10); // use bcrypt to encrypt password
+            const user = authRepository.register(username, hashedPassword);
+            const token = this.getToken(user);
+            return {
+                success: false,
+                message: 'Registration successful',
+                user: {
+                    id: user.id,
+                    username: user.username,
+                },
+                token
+            };
+        } catch (error) {
+            console.error('Registration error: ', error);
+            return { success: false, message: 'Internal server error' };
+        }
     },
     
     async checkPassword(user, password){ // check password through bcrypt
