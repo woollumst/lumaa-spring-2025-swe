@@ -17,9 +17,7 @@ export const authRepository = {
     async getByUsername (username) {  // pull user from db to handle login
         try{
             const result = await client.query(
-                'SELECT username, password 
-                FROM userdb 
-                WHERE username=$1', 
+                'SELECT username, password FROM userdb WHERE username=$1', 
                 [username]
             );
             return result.rows[0];
