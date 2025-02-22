@@ -5,8 +5,6 @@ const authRoutes = express.Router();
 
 authRoutes.post("/register", async (req, res) => {
     const { username, password } = req.body; // accept user input for username/password
-    
-    console.log('attempting to register...');
 
     try{ // result = { success, message, user, token }
         const result = authService.authRegister(username, password); // call service layer to handle registration
@@ -21,7 +19,7 @@ authRoutes.post("/login", async (req, res) => {
     const { username, password } = req.body; //accept user input for username/password
 
     try{ // result = { success, message, user, token }
-        const resilt = authService.handleLogin(username, password); // handle login, generate token upon success
+        const result = authService.handleLogin(username, password); // handle login, generate token upon success
         res.json({ result }); // complete login, send token
     } catch(error) {
         console.error(error);
