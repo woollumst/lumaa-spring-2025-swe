@@ -12,6 +12,19 @@ const TaskList = () => {
     return (
         <div>
             <h2>Tasks</h2>
+            <form onSubmit={CreateTask}>
+                <input 
+                    type="text"
+                    placeholder="Title"
+                    value={ title }
+                />
+                <input 
+                    type="text"
+                    placeholder="Description"
+                    value={ description }
+                />
+                <button type="submit">Submit</button>
+            </form>
             <ul>
                 {tasks.map((task) => (
                     <li key={task.id}>
