@@ -11,7 +11,7 @@ const taskRoutes = express.Router();
 // Get Task List
 taskRoutes.get('/', authenticate, async (req, res) => {
     try{
-        const result = await taskService.getTasks();
+        const result = taskService.getTasks();
         if(!result.success){
             res.status(404).json({ error: 'Failed to fetch task list' });
         }
@@ -26,7 +26,7 @@ taskRoutes.get('/', authenticate, async (req, res) => {
 taskRoutes.post('', authenticate, async (req, res) => {
     const task = req.body;
     try{
-        const result = await taskService.createTask(task);
+        const result = taskService.createTask(task);
         if(!result.success){
             res.status(404).json({ error : 'Failed to create task' });
         }
@@ -42,7 +42,7 @@ taskRoutes.put('/:id', authenticate, async (req, res) => {
     const { id } = req.params;
     const task = req.body;
     try{
-        const result = await taskService.updateTask(id, task);
+        const result = taskService.updateTask(id, task);
         if(!result.success){
             res.status(404).json({ error : 'Task not found' });
         }
@@ -57,7 +57,7 @@ taskRoutes.put('/:id', authenticate, async (req, res) => {
 taskRoutes.delete('/:id', authenticate, async (req, res) => { 
     const { id } = req.params;
     try{
-        const result = await taskService.deleteTask(id);
+        const result = taskService.deleteTask(id);
         if(!result.success){
             res.status(404).json({ error : 'Task not found' });
         }
