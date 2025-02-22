@@ -1,6 +1,7 @@
 import {useEffect, useState } from "react";
 import { fetchTasks } from "../services/api";
 import { Task } from "../types";
+import taskServic
 
 const TaskList = () => {
     const [tasks, setTasks] = useState<Task[]>([]);
@@ -8,6 +9,10 @@ const TaskList = () => {
     useEffect(() => {
         fetchTasks().then(setTasks).catch(error => console.error("Failed to get tasks", error));
     }, []);
+
+    const CreateTask = () => {
+        
+    }
 
     return (
         <div>
