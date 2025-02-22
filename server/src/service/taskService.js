@@ -1,7 +1,6 @@
-import taskRepository from "../repository/taskRepository.js";
+import { taskRepository } from "../repository/taskRepository.js";
 
-class taskService {
-    constructor(){}
+export const taskService = {
     getTasks() {
         return taskRepository.getTasks();
     }
@@ -19,6 +18,4 @@ class taskService {
     deleteTask (id) {
         taskRepository.deleteTask(id);
     }
-}
-
-export default taskService;
+};
