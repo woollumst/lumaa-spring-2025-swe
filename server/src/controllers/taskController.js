@@ -23,10 +23,10 @@ taskRoutes.get('/', authenticate, async (req, res) => {
 });
 
 // Create a New Task
-taskRoutes.post('', authenticate, (req, res) => {
+taskRoutes.post('', authenticate, async (req, res) => {
     const task = req.body;
     try{
-        const result = taskService.createTask(task);
+        const result = await taskService.createTask(task);
         if(!result.success){
             res.status(404).json({ error : 'Failed to create task' });
         }
@@ -38,11 +38,11 @@ taskRoutes.post('', authenticate, (req, res) => {
 });
 
 // Update a Task by ID
-taskRoutes.put('/:id', authenticate, (req, res) => { 
+taskRoutes.put('/:id', authenticate, async (req, res) => { 
     const { id } = req.params;
     const task = req.body;
     try{
-        const result = taskService.updateTask(id, task);
+        const result = await taskService.updateTask(id, task);
         if(!result.success){
             res.status(404).json({ error : 'Task not found' });
         }
@@ -54,10 +54,10 @@ taskRoutes.put('/:id', authenticate, (req, res) => {
 });
 
 // Delete Task by ID
-taskRoutes.delete('/:id', authenticate, (req, res) => { 
+taskRoutes.delete('/:id', authenticate, async (req, res) => { 
     const { id } = req.params;
     try{
-        const result = taskService.deleteTask(id);
+        const result = await taskService.deleteTask(id);
         if(!result.success){
             res.status(404).json({ error : 'Task not found' });
         }
