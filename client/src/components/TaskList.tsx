@@ -1,7 +1,6 @@
 import {useEffect, useState } from "react";
-import { fetchTasks } from "../services/api";
+import { fetchTasks, createTask, deleteTask, updateTask } from "../services/api";
 import { Task } from "../types";
-import taskServic
 
 const TaskList = () => {
     const [tasks, setTasks] = useState<Task[]>([]);
@@ -10,9 +9,15 @@ const TaskList = () => {
         fetchTasks().then(setTasks).catch(error => console.error("Failed to get tasks", error));
     }, []);
 
-    const CreateTask = () => {
-        
-    }
+    const CreateTask = async (e: React.FormEvent) => {
+        e.preventDefault();
+        try{
+            const response = await createTask({ title, description }); //add userId to task fields here
+            setTasks((prevTasks) => [...prevTasks, response.task]);
+        } catch(error) {
+            console.error('Failed to create task', error);
+        }
+    };
 
     return (
         <div>
