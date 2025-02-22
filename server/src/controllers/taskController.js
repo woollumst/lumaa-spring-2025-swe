@@ -1,6 +1,6 @@
 import express from "express";
 import client from "../repository/db.js";
-import { taskService } from "../services/taskService.js";
+import { taskService } from "../service/taskService.js";
 import authenticate from "../middleware/authMiddleware.js";
 
 const taskRoutes = express.Router();
