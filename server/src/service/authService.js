@@ -1,11 +1,11 @@
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
-import authRepository from "../repository/authRepository.js";
+import { authRepository } from "../repository/authRepository.js";
 
 dotenv.config();
 
-const authService{
+export const authService = {
     async authRegister(username, password) {
         const hashedPassword = await bcrypt.hash(password, 10); // use bcrypt to encrypt password
         return authRepository.register(username, hashedPassword);
@@ -36,5 +36,4 @@ const authService{
 
         return this.getToken(user);
     }
-}
-export default authService;
+};
