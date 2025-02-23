@@ -43,13 +43,12 @@ const TaskList = () => {
                 <button type="submit">Submit</button>
             </form>
             <ul>
-                {(!tasks) &&  
-                    <li>Task List Empty</li>
-                }
-                {tasks.map((task) => (
-                    <li key={task.id}>
-                        {task.title} - {task.isCompleted ? "✅" : "❌"}
-                    </li>
+                { tasks.length === 0 &&  <p>Task List Empty</p> }
+                { tasks.length > 0 && (
+                    tasks.map((task) => (
+                        <li key={task.id}>
+                            {task.title} - {task.isCompleted ? "✅" : "❌"}
+                        </li>
                 ))}
             </ul>
         </div>
