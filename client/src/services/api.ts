@@ -4,11 +4,12 @@ import { Task } from "../types";
 const API_URL = "http://localhost:5000/";
 
 export const fetchTasks = async (): Promise<Task[]> => {
-    const response = await fetch(`${API_URL}/tasks`);
-    if(!response.ok){
+    const response = await fetch(`${API_URL}tasks`);
+    const data = await response.json();
+    if(!data.success){
         throw new Error(`Error fetching tasks: ${response.statusText}`);
     }
-    return response.data;
+    return data.tasks;
 }; //fix
 
 export const createTask = async (task: Partial<Task>): Promise<Task> => {
@@ -21,8 +22,8 @@ export const updateTask = async (task: Partial<Task>): Promise<Task> => {
     return response.data;
 };
 
-export const deleteTask = async (task: Partial<Task>): Promise<Task> => { // might need to change this
-    const response = await axios.delete(`${API_URL}tasks/:${task.id}`, task);
+export const deleteTask = async (task: Partial<Task>) => { // might need to change this
+    const response = await axios.delete(`${API_URL}tasks/:${task.id}`);
     return response.data;
 };
 

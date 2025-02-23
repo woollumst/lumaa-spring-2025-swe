@@ -9,8 +9,8 @@ export const authService = {
     async authRegister(username, password) {
         try{
             const hashedPassword = await bcrypt.hash(password, 10); // use bcrypt to encrypt password
-            const user = authRepository.register(username, hashedPassword);
-            const token = this.getToken(user);
+            const user = await authRepository.register(username, hashedPassword);
+            const token = await this.getToken(user);
             return {
                 success: false,
                 message: 'Registration successful',
@@ -38,19 +38,19 @@ export const authService = {
         ); //generate JWT
     },
 
-    handleLogin(username, password) {
+    async handleLogin(username, password) {
         try{
-            const user = authRepository.getByUsername(username);
+            const user = await authRepository.getByUsername(username);
             if(!user){ // handle error for wrong username
                 return res.status(401).json({ message: 'Invalid username or password' });
             }
             
-            const isMatch = this.checkPassword(user, password);
+            const isMatch = await this.checkPassword(user, password);
             if(!isMatch){ // handle error for wrong password
                 return res.status(401).json({ message: 'Invalid username or password' });
             }
     
-            const token = this.getToken(user);
+            const token = await this.getToken(user);
             return {
                 success: true,
                 message: 'Login successful',

@@ -15,7 +15,16 @@ taskRoutes.get('/', authenticate, async (req, res) => {
         if(!result.success){
             res.status(404).json({ error: 'Failed to fetch task list' });
         }
-        res.status(200).json({ result }); // Fix?
+        res.status(200).json({
+            success: true,
+            tasks: tasksmap(task => ({
+                id: task.id,
+                title: task.title,
+                description: task.description,
+                isComplete: task.isComplete,
+                userId: task.userId
+            }))
+        }); // Fix?
     } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, message: 'Error getting task list', error: 'Failed to get tasks' });

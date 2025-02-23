@@ -4,6 +4,9 @@ import { Task } from "../types";
 
 const TaskList = () => {
     const [tasks, setTasks] = useState<Task[]>([]);
+    const [title, setTitle ] = useState('');
+    const [description, setDescription ] = useState('');
+
 
     useEffect(() => {
         fetchTasks().then(setTasks).catch(error => console.error("Failed to get tasks", error));
@@ -13,7 +16,7 @@ const TaskList = () => {
         e.preventDefault();
         try{
             const response = await createTask({ title, description }); //add userId to task fields here
-            setTasks((prevTasks) => [...prevTasks, response.task]);
+            setTasks((prevTasks) => [...prevTasks, response]);
         } catch(error) {
             console.error('Failed to create task', error);
         }
@@ -27,15 +30,22 @@ const TaskList = () => {
                     type="text"
                     placeholder="Title"
                     value={ title }
+                    onChange={(e) => setTitle(e.target.value)}
+                    required
                 />
                 <input 
                     type="text"
                     placeholder="Description"
                     value={ description }
+                    onChange={(e) => setDescription(e.target.value)}
+                    required
                 />
                 <button type="submit">Submit</button>
             </form>
             <ul>
+                {(!tasks) &&  
+                    <li>Task List Empty</li>
+                }
                 {tasks.map((task) => (
                     <li key={task.id}>
                         {task.title} - {task.isCompleted ? "✅" : "❌"}
