@@ -15,13 +15,20 @@ export const taskService = {
         }
     },
 
-    createTask (task) {
+    async createTask (task) {
         try{
-            const {title, description, isComplete, userId} = task;
-            const result = taskRepository.createTask(title, description, isComplete, userId);
+            const {title, description, userId } = task;
+            const result = await taskRepository.createTask(title, description, userId);
+            if(!result){
+                return {
+                    success: false,
+                    message: 'Create task failed',
+                };
+            }
             return {
                 success: true,
                 message: 'Create task successful',
+                task: result,
             }; 
         } catch (error) {
             console.error('createTask error: ', error);

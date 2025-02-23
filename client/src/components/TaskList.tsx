@@ -9,6 +9,8 @@ const TaskList = () => {
     const [description, setDescription ] = useState('');
     const [toLogout, setToLogout ] = useState(false);
     const { token } = useAuth();
+    const [isEditing, setIsEditing] = useState<Task | null>(null);
+    const [toDelete, setToDelete] = useState<Task | null>(null);
 
     useEffect(() => {
         if(token){
@@ -22,8 +24,8 @@ const TaskList = () => {
         e.preventDefault();
         if(token){
         try{
-            const response = await createTask({ title, description }, token);
-            setTasks([...tasks, response]);
+            const response = await createTask({ title, description }, token); // returns { task }
+            setTasks([...tasks, response]); // adds new task to task list
         } catch(error) {
             console.error('Failed to create task', error);
         }
@@ -34,6 +36,30 @@ const TaskList = () => {
 
     if (toLogout){
         useAuth().logout();
+    }
+
+    if(toDelete){
+        if(token)
+            deleteTask(toDelete, token);
+        setTasks((prevTasks) => prevTasks.filter((task) => task.id !== toDelete.id));
+        setToDelete(null);
+    }
+    
+    const handleUpdate = async () => {
+        if(!isEditing) return;
+
+        try{
+            if(token) {
+                await updateTask(isEditing, token);
+
+                setTasks((prevTasks) =>
+                    prevTasks.map((task) =>
+                        task.id === isEditing.id ? { ...task, ...isEditing } : task));
+            }
+            setIsEditing(null);
+        } catch (error) {
+            console.error("Failed to update task: ", error);
+        }
     }
 
     return (
@@ -62,9 +88,40 @@ const TaskList = () => {
                 { tasks.length > 0 && (
                     tasks.map((task) => (
                         <li key={task.id}>
-                            {task.title} - {task.isCompleted ? "✅" : "❌"}
+                            {isEditing?.id === task.id ? ( 
+                                <>
+                                    <input
+                                        type="text"
+                                        placeholder={isEditing.title}
+                                        value={isEditing.title}
+                                        onChange={(e) => setIsEditing({ ...isEditing, title: e.target.value})}
+                                    />
+                                    <input
+                                        type="text"
+                                        placeholder={isEditing.description}
+                                        value={isEditing.description}
+                                        onChange={(e) => setIsEditing({ ...isEditing, description: e.target.value})}
+                                    />
+                                    <input 
+                                        type="checkbox"
+                                        checked={isEditing.isCompleted}
+                                        onChange={() => setIsEditing({...isEditing, isCompleted: !isEditing.isCompleted})}
+                                    />
+                                    <button onClick={handleUpdate}>Save</button>
+                                    <button onClick={() => setIsEditing(null)}>Cancel</button>
+                                </>
+                            ) : (
+                            <>
+                                {task.title} - {task.isCompleted ? "✅" : "❌"}
+                                <ul>
+                                    <button onClick={() => setIsEditing(task)}>Edit</button>
+                                    <button onClick={() => setToDelete(task)}>Delete</button>
+                                </ul>
+                            </>
+                            )}
                         </li>
-                )))}
+                    ))
+                )}
             </ul>
         </div>
     );

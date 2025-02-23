@@ -15,18 +15,18 @@ client.connect().then(() => console.log('Connected to Database')).catch((err) =>
 async function initializeDB(){
   await client.query(`CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY, 
-    username UNIQUE VARCHAR(50) NOT NULL,
+    username VARCHAR(50) UNIQUE NOT NULL,
     password TEXT NOT NULL
-  `); // set up users table
+  )`); // set up users table
   
   await client.query(`CREATE TABLE IF NOT EXISTS tasks (
     id SERIAL PRIMARY KEY, 
     title VARCHAR(255) UNIQUE NOT NULL, 
     description TEXT, 
-    isComplete BOOLEAN, 
+    isComplete BOOLEAN DEFAULT false, 
     userId INT NOT NULL, 
-    CONSTRAINT fk_user FOREIGN KEY userId REFERENCES users(id) ON DELETE CASCADE
-  `};
+    CONSTRAINT fk_user FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
+  )`);
     
   console.log("Tables created/exist");
 }

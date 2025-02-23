@@ -1,30 +1,56 @@
 import client from "./db.js";
+import { authRepository } from "./authRepository.js";
 
 export const taskRepository = {
-    getTasks(){
-        return client.query(
-            'SELECT * FROM tasks'
-        );
+    async getTasks(){
+        try{
+            const result = await client.query(
+                'SELECT * FROM tasks'
+            );
+            return result.rows;
+        } catch(error){
+            console.error('Database error, failed to get tasks');
+            throw new Error('Database get tasks query failed');
+        }
     },
     
-    createTask(title, description, isComplete, userId){
-        return client.query( // insert task into database
-            'INSERT INTO tasks (title, description, isComplete, userId) VALUES ($1, $2, $3, $4) RETURNING *',
-            [ title, description, isComplete, userId ]
-        );
+    async createTask(title, description, username){
+        const idobj = await authRepository.getIDByUsername(username);
+        const userId = idobj.id;
+        try{
+            const result = await client.query( // insert task into database
+                'INSERT INTO tasks (title, description, userId) VALUES ($1, $2, $3) RETURNING *',
+                [ title, description, userId ]
+            );
+            return result.rows[0];
+        } catch(error){
+            console.error('Database error, failed to create tasks');
+            throw new Error('Database create task query failed');
+        }
     },
     
-    updateTask(id, title, description, isComplete) {
-        return client.query( // update task in database
-            'UPDATE tasks SET title = $1, description = $2, isComplete = $3 WHERE id = $4 RETURNING *',
-            [ title, description, isComplete, id ]
-        );
+    async updateTask(id, title, description, isComplete) {
+        try{
+            const result = await client.query( // update task in database
+                'UPDATE tasks SET title = $1, description = $2, isComplete = $3 WHERE id = $4 RETURNING *',
+                [ title, description, isComplete, id ]
+            );
+            return result.rows[0];
+        } catch(error){
+            console.error('Database error, failed to update task');
+            throw new Error('Database update task query failed');
+        }
     },
     
-    deleteTask(id) {
-        client.query(
-            'DELETE FROM tasks WHERE id = $1',
-            [ id ]
-        );
+    async deleteTask(id) {
+        try{
+            await client.query(
+                'DELETE FROM tasks WHERE id=$1',
+                [ id ]
+            );
+        } catch(error){
+            console.error('Database error, failed to delete task');
+            throw new Error('Database delete task query failed');
+        }
     }
 };

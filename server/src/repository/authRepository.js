@@ -1,4 +1,5 @@
 import client from "./db.js";
+import { taskRepository } from "./taskRepository.js";
 
 export const authRepository = {
     register (username, hashedPassword) {
@@ -18,6 +19,19 @@ export const authRepository = {
         try{
             const result = await client.query(
                 'SELECT username, password FROM users WHERE username=$1', 
+                [username]
+            );
+            return result.rows[0];
+        } catch (error) {
+            console.error('Database error');
+            throw new Error('Database query failed');
+        }
+    },
+
+    async getIDByUsername (username) {
+        try{
+            const result = await client.query(
+                'SELECT id FROM users WHERE username=$1',
                 [username]
             );
             return result.rows[0];

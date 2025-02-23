@@ -12,6 +12,7 @@ taskRoutes.get('/', authenticate, async (req, res) => {
     try{
         const result = await taskService.getTasks();
         const tasks = result.tasks;
+        console.log("Tasks: ", tasks); //debug code
         if(!result.success){
             res.status(404).json({ error: 'Failed to fetch task list' });
         }
@@ -35,13 +36,17 @@ taskRoutes.get('/', authenticate, async (req, res) => {
 // Create a New Task
 taskRoutes.post('', authenticate, async (req, res) => {
     const task = req.body;
-    task.userId = req.user.id;
+    task.userId = req.user.username;
     try{
-        const result = taskService.createTask(task);
-        if(!result.success){
+        const result = await taskService.createTask(task);
+        if(!result.success){ // no task
             res.status(404).json({ error : 'Failed to create task' });
-        }
-        res.status(201).json({ result });
+        } else{ // task creation successful
+            res.status(201).json({
+                success: true,
+                task: result.task
+            });
+    }   
     } catch (error) {
         console.error(error);
         res.status(500).json({ succes: false, message: 'Error creating task', error: 'Failed to create task' });
@@ -50,14 +55,19 @@ taskRoutes.post('', authenticate, async (req, res) => {
 
 // Update a Task by ID
 taskRoutes.put('/:id', authenticate, async (req, res) => { 
+    console.log("Tried to update task: ", req.body);
     const task = req.body;
-    task.id = req.params;
+    const { id } = req.params;
+    task.id = id;
     try{
         const result = taskService.updateTask(task);
         if(!result.success){
             res.status(404).json({ error : 'Task not found' });
         }
-        res.status(202).json({ result });
+        res.status(202).json({ 
+            success: true,
+            task: result.task
+        });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error : 'Failed to update task' });

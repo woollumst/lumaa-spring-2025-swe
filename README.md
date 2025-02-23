@@ -1,3 +1,49 @@
+## Steps to Setup Database:
+1. Install PostrgreSQL
+2. Create user profile and grant permissions if necessary
+2. Create database titled **taskdb** (important for backend to talk to db correctly)
+
+
+
+## Setup .env file: 
+1. Create .env file in /server/ directory
+2. Required properties:
+  a. JWT_SECRET= a long string of text, set before registering
+  b. PORT= by default 5000, change if necessary
+  c. DATABASE_URL= pre-composed URL string to accessing database. Use psql user/password. User must have permissions on psql directory
+3. Example Below: ( 
+  # .env file 
+  
+    JWT_SECRET=89thebestsecret4328iveever0943had
+    PORT=5000 
+    DATABASE_URL=postgres://USERNAME:PASSWORD@localhost:5432/taskdb
+)
+
+
+
+## How to run the backend:
+1. cd to server folder
+2. Ensure .env file setup correctly
+2. npm install
+4. npm run start
+
+
+
+## How to run the frontend:
+1. cd to client directory
+2. npm install
+3. npm run dev
+Frontend points to default backend location: localhost:5000/
+
+## Relevant notes:
+May have to refresh to see updates, focusing on core features first
+
+
+## Salary Expectations:
+$25/hr : ~$2000/mo
+
+
+
 # Full-Stack Coding Challenge
 
 **Deadline**: Sunday, Feb 23th 11:59 pm PST
