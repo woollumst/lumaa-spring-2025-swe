@@ -12,11 +12,11 @@ const TaskList = () => {
         fetchTasks().then(setTasks).catch(error => console.error("Failed to get tasks", error));
     }, []);
 
-    const CreateTask = async (e: React.FormEvent) => {
+    const handleCreateTask = async (e: React.FormEvent) => {
         e.preventDefault();
         try{
-            const response = await createTask({ title, description }); //add userId to task fields here
-            setTasks((prevTasks) => [...prevTasks, response]);
+            const response = await createTask({ title, description });
+            setTasks([...tasks, response]);
         } catch(error) {
             console.error('Failed to create task', error);
         }
@@ -25,7 +25,7 @@ const TaskList = () => {
     return (
         <div>
             <h2>Tasks</h2>
-            <form onSubmit={CreateTask}>
+            <form onSubmit={handleCreateTask}>
                 <input 
                     type="text"
                     placeholder="Title"
@@ -49,7 +49,7 @@ const TaskList = () => {
                         <li key={task.id}>
                             {task.title} - {task.isCompleted ? "✅" : "❌"}
                         </li>
-                ))}
+                )))}
             </ul>
         </div>
     );

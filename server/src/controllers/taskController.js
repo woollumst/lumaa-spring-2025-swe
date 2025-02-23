@@ -11,13 +11,14 @@ const taskRoutes = express.Router();
 // Get Task List
 taskRoutes.get('/', authenticate, async (req, res) => {
     try{
-        const result = taskService.getTasks();
+        const result = await taskService.getTasks();
+        const tasks = result.tasks;
         if(!result.success){
             res.status(404).json({ error: 'Failed to fetch task list' });
         }
         res.status(200).json({
             success: true,
-            tasks: tasksmap(task => ({
+            tasks: tasks.map(task => ({
                 id: task.id,
                 title: task.title,
                 description: task.description,
@@ -26,6 +27,7 @@ taskRoutes.get('/', authenticate, async (req, res) => {
             }))
         }); // Fix?
     } catch (error) {
+        console.log('Server error with fetching tasks');
         console.error(error);
         res.status(500).json({ success: false, message: 'Error getting task list', error: 'Failed to get tasks' });
     }
