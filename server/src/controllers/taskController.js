@@ -34,6 +34,7 @@ taskRoutes.get('/', authenticate, async (req, res) => {
 // Create a New Task
 taskRoutes.post('', authenticate, async (req, res) => {
     const task = req.body;
+    task.userId = req.user.id;
     try{
         const result = taskService.createTask(task);
         if(!result.success){
@@ -48,10 +49,10 @@ taskRoutes.post('', authenticate, async (req, res) => {
 
 // Update a Task by ID
 taskRoutes.put('/:id', authenticate, async (req, res) => { 
-    const { id } = req.params;
     const task = req.body;
+    task.id = req.params;
     try{
-        const result = taskService.updateTask(id, task);
+        const result = taskService.updateTask(task);
         if(!result.success){
             res.status(404).json({ error : 'Task not found' });
         }
