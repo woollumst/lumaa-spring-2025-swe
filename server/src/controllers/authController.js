@@ -17,10 +17,15 @@ authRoutes.post("/register", async (req, res) => {
 
 authRoutes.post("/login", async (req, res) => {
     const { username, password } = req.body; //accept user input for username/password
+    
+    try{ // complete login, send token
+        const { success, message, user, token } = await authService.handleLogin(username, password); // handle login, generate token upon success
+        
+        if(!success){
+            res.status(500).json({ success: false, message: 'Login failed' });
+        }
 
-    try{ // result = { success, message, user, token }
-        const result = authService.handleLogin(username, password); // handle login, generate token upon success
-        res.json({ result }); // complete login, send token
+        res.json(token); // result = { success, message, user, token }
     } catch(error) {
         console.error(error);
         res.status(500).json({ success: false, message: 'Error logging in', error: error.message });

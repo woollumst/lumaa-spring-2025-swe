@@ -1,10 +1,10 @@
 import React, { useState, useContext } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext';
+import { useAuth } from '../context/AuthProvider';
 import { loginUser } from '../services/api';
 
 const LoginPage = () => {
-    const { login } = useContext(AuthContext) || { login: () => {} };
+    const { login } = useAuth();
     const navigate = useNavigate();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -13,9 +13,11 @@ const LoginPage = () => {
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         try{
-            const token = await loginUser({ username, password });
-            login(token);
-            navigate('/');
+            const token = await loginUser({ username, password }); //token
+            if(token){
+                login(token);
+                navigate('/');
+            }
         } catch(error) {
             console.error('Login failed', error);
         }

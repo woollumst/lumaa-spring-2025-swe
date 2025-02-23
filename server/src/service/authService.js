@@ -41,6 +41,7 @@ export const authService = {
     async handleLogin(username, password) {
         try{
             const user = await authRepository.getByUsername(username);
+            // console.log(user); //debug code, passed
             if(!user){ // handle error for wrong username
                 return res.status(401).json({ message: 'Invalid username or password' });
             }
@@ -51,6 +52,7 @@ export const authService = {
             }
     
             const token = await this.getToken(user);
+            //console.log(token); //debug code, passed
             return {
                 success: true,
                 message: 'Login successful',

@@ -5,10 +5,17 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const authenticate = (req, res, next) => {
-  const token = req.headers['Authorization']?.split(' ')[1]; // Assuming the token is in the form "Bearer <token>"
+  const authHeader = req.headers.authorization;
+  
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    console.log("No token or incorrect format");
+    return res.status(401).json({message: "Forbidden: No token provided"});
+  }
+
+  const token = authHeader.split(' ')[1];
 
   if (!token) {
-    return res.status(403).json({ message: 'Access denied, token missing!' });
+    return res.status(401).json({ message: 'Forbidden: token missing!' });
   }
 
   try {
@@ -16,7 +23,7 @@ const authenticate = (req, res, next) => {
     req.user = decoded;
     next();
   } catch (error) {
-    res.status(401).json({ message: 'Invalid or expired token' });
+    res.status(403).json({ message: 'Invalid or expired token' });
   }
 };
 

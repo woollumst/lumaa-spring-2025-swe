@@ -1,12 +1,12 @@
 import { useContext } from 'react';
-import { AuthContext } from '../context/AuthContext';
+import { useAuth } from '../context/AuthProvider';
 import { Navigate } from 'react-router-dom';
 import TaskList from '../components/TaskList'
 
 const DashboardPage = () => {
-    const { isAuthenticated } = useContext(AuthContext) || { isAuthenticated: false };
+    const { token } = useAuth();
 
-    if (!isAuthenticated) {
+    if (!token) {
         return <Navigate to="/login" />
     }
 
