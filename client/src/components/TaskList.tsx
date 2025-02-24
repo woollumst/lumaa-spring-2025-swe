@@ -34,6 +34,10 @@ const TaskList = () => {
         }
     };
 
+    const handleEditClick = (task: Task) => {
+        setIsEditing({ ...task });
+    }
+
     if (toLogout){
         useAuth().logout();
     }
@@ -43,6 +47,16 @@ const TaskList = () => {
             deleteTask(toDelete, token);
         setTasks((prevTasks) => prevTasks.filter((task) => task.id !== toDelete.id));
         setToDelete(null);
+    }
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        if (!isEditing) return;
+        setIsEditing({ ...isEditing, [e.target.name]: e.target.value });
+    }
+
+    const toggleComplete = () => {
+        if (!isEditing) return;
+        setIsEditing({ ...isEditing, isCompleted: !isEditing.isCompleted})
     }
     
     const handleUpdate = async () => {
@@ -74,8 +88,7 @@ const TaskList = () => {
                     onChange={(e) => setTitle(e.target.value)}
                     required
                 />
-                <input 
-                    type="text"
+                <textarea 
                     placeholder="Description"
                     value={ description }
                     onChange={(e) => setDescription(e.target.value)}
@@ -92,21 +105,23 @@ const TaskList = () => {
                                 <>
                                     <input
                                         type="text"
-                                        placeholder={isEditing.title}
+                                        name="title"
                                         value={isEditing.title}
-                                        onChange={(e) => setIsEditing({ ...isEditing, title: e.target.value})}
+                                        onChange={handleChange}
                                     />
-                                    <input
-                                        type="text"
-                                        placeholder={isEditing.description}
+                                    <textarea
+                                        name="description"
                                         value={isEditing.description}
-                                        onChange={(e) => setIsEditing({ ...isEditing, description: e.target.value})}
+                                        onChange={handleChange}
                                     />
-                                    <input 
-                                        type="checkbox"
-                                        checked={isEditing.isCompleted}
-                                        onChange={() => setIsEditing({...isEditing, isCompleted: !isEditing.isCompleted})}
-                                    />
+                                    <label>
+                                        <input 
+                                            type="checkbox"
+                                            checked={isEditing.isCompleted}
+                                            onChange={toggleComplete}
+                                        />
+                                        Completed
+                                    </label>
                                     <button onClick={handleUpdate}>Save</button>
                                     <button onClick={() => setIsEditing(null)}>Cancel</button>
                                 </>
@@ -114,7 +129,7 @@ const TaskList = () => {
                             <>
                                 {task.title} - {task.isCompleted ? "✅" : "❌"}
                                 <ul>
-                                    <button onClick={() => setIsEditing(task)}>Edit</button>
+                                    <button onClick={() => handleEditClick(task)}>Edit</button>
                                     <button onClick={() => setToDelete(task)}>Delete</button>
                                 </ul>
                             </>
