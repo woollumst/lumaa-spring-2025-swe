@@ -68,7 +68,7 @@ const TaskList = () => {
 
                 setTasks((prevTasks) =>
                     prevTasks.map((task) =>
-                        task.id === isEditing.id ? { ...task, ...isEditing } : task));
+                        (task.id === isEditing.id ? isEditing : task)));
             }
             setIsEditing(null);
         } catch (error) {
