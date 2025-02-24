@@ -31,7 +31,7 @@ export const createTask = async (task: Partial<Task>, token: string): Promise<Ta
 };
 
 export const updateTask = async (task: Partial<Task>, token: string): Promise<Task> => {
-    const response = await axios.patch(`${API_URL}tasks/${task.id}`, task, 
+    const response = await axios.put(`${API_URL}tasks/${task.id}`, task, 
         { headers: { 
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",

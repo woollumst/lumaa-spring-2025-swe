@@ -12,7 +12,6 @@ taskRoutes.get('/', authenticate, async (req, res) => {
     try{
         const result = await taskService.getTasks();
         const tasks = result.tasks;
-        console.log("Tasks: ", tasks); //debug code
         if(!result.success){
             res.status(404).json({ error: 'Failed to fetch task list' });
         }
@@ -55,19 +54,21 @@ taskRoutes.post('', authenticate, async (req, res) => {
 
 // Update a Task by ID
 taskRoutes.put('/:id', authenticate, async (req, res) => { 
-    console.log("Tried to update task: ", req.body);
     const task = req.body;
     const { id } = req.params;
     task.id = id;
+    console.log("isComplete status: ", task.isComplete);
     try{
-        const result = taskService.updateTask(task);
+        const result = await taskService.updateTask(task);
+        console.log("Update Result: ", result);
         if(!result.success){
             res.status(404).json({ error : 'Task not found' });
+        } else{
+            res.status(202).json({ 
+                success: true,
+                task: result.task
+            });
         }
-        res.status(202).json({ 
-            success: true,
-            task: result.task
-        });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error : 'Failed to update task' });

@@ -56,7 +56,11 @@ const TaskList = () => {
 
     const toggleComplete = () => {
         if (!isEditing) return;
-        setIsEditing({ ...isEditing, isCompleted: !isEditing.isCompleted})
+        if(isEditing.isCompleted === null){
+            setIsEditing({ ...isEditing, isCompleted: true });
+        } else {
+            setIsEditing({ ...isEditing, isCompleted: !isEditing.isCompleted})
+        }
     }
     
     const handleUpdate = async () => {
@@ -64,6 +68,7 @@ const TaskList = () => {
 
         try{
             if(token) {
+                console.log("isEditing Task: ", isEditing);
                 await updateTask(isEditing, token);
 
                 setTasks((prevTasks) =>
@@ -117,7 +122,7 @@ const TaskList = () => {
                                     <label>
                                         <input 
                                             type="checkbox"
-                                            checked={isEditing.isCompleted}
+                                            checked={isEditing.isCompleted ?? false}
                                             onChange={toggleComplete}
                                         />
                                         Completed
@@ -127,7 +132,8 @@ const TaskList = () => {
                                 </>
                             ) : (
                             <>
-                                {task.title} - {task.isCompleted ? "✅" : "❌"}
+                                {task.isCompleted ? "✅" : "❌"}
+                                {task.title} - {task.description} <br />
                                 <ul>
                                     <button onClick={() => handleEditClick(task)}>Edit</button>
                                     <button onClick={() => setToDelete(task)}>Delete</button>
