@@ -38,7 +38,6 @@ Frontend points to default backend location: localhost:5000/
 ![Demo Video](appsamplevid.mp4)
 
 ## Relevant notes:
-May have to refresh to see updates, focusing on core features first
 
 
 ## Salary Expectations:
