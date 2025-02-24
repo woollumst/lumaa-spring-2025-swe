@@ -40,9 +40,16 @@ export const taskService = {
         try{
             const {id, title, description, isComplete, userId } = task;
             const result =  await taskRepository.updateTask(id, title, description, isComplete);
+            if(!result){
+                return {
+                    success: false,
+                    message: 'Update task failed',
+                };
+            }
             return {
                 success: true,
                 message: 'Update task successful',
+                task: result,
             };
         } catch (error) {
             console.error('updateTask error: ', error);
