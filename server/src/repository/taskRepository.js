@@ -29,11 +29,11 @@ export const taskRepository = {
         }
     },
     
-    async updateTask(id, title, description, isComplete) {
+    async updateTask(id, title, description, isCompleted) {
         try{
             const result = await client.query( // update task in database
-                'UPDATE tasks SET title = $1, description = $2, isComplete = $3 WHERE id = $4 RETURNING *',
-                [ title, description, isComplete, id ]
+                'UPDATE tasks SET title = $1, description = $2, isCompleted = $3 WHERE id = $4 RETURNING *',
+                [ title, description, isCompleted, id ]
             );
             return result.rows[0];
         } catch(error){

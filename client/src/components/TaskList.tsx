@@ -67,15 +67,16 @@ const TaskList = () => {
         if(!isEditing) return;
 
         try{
-            if(token) {
+                if(!token) return;
+                
                 console.log("isEditing Task: ", isEditing);
                 await updateTask(isEditing, token);
 
                 setTasks((prevTasks) =>
                     prevTasks.map((task) =>
                         (task.id === isEditing.id ? isEditing : task)));
-            }
-            setIsEditing(null);
+                setIsEditing(null);
+            
         } catch (error) {
             console.error("Failed to update task: ", error);
         }

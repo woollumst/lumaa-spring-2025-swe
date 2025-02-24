@@ -57,10 +57,8 @@ taskRoutes.put('/:id', authenticate, async (req, res) => {
     const task = req.body;
     const { id } = req.params;
     task.id = id;
-    console.log("isComplete status: ", task.isComplete);
     try{
         const result = await taskService.updateTask(task);
-        console.log("Update Result: ", result);
         if(!result.success){
             res.status(404).json({ error : 'Task not found' });
         } else{

@@ -38,8 +38,8 @@ export const taskService = {
     
     async updateTask (task) {
         try{
-            const {id, title, description, isComplete, userId } = task;
-            const result =  await taskRepository.updateTask(id, title, description, isComplete);
+            const {id, title, description, isCompleted, userId } = task;
+            const result =  await taskRepository.updateTask(id, title, description, isCompleted);
             if(!result){
                 return {
                     success: false,
